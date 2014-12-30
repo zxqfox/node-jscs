@@ -61,6 +61,14 @@ describe('rules/disallow-space-before-binary-operators', function() {
         checker.configure({ disallowSpaceBeforeBinaryOperators: [','] });
         assert(checker.checkString('a = b').isEmpty());
     });
+    it('should not report operator around regex', function() {
+        checker.configure({ disallowSpaceBeforeBinaryOperators: [','] });
+        assert(checker.checkString('var x = "str".replace(/^.$/, "$1");').isEmpty());
+    });
+    it('should report operator around regex', function() {
+        checker.configure({ disallowSpaceBeforeBinaryOperators: [','] });
+        assert(checker.checkString('var x = "str".replace(/^.$/ ,"$1");').getErrorCount() === 1);
+    });
     it('should report comma operator (as separator) in function argument', function() {
         checker.configure({ disallowSpaceBeforeBinaryOperators: [','] });
         assert(checker.checkString('function test(a , b){}').getErrorCount() === 1);
